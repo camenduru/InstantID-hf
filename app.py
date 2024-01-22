@@ -18,7 +18,6 @@ from insightface.app import FaceAnalysis
 from style_template import styles
 from pipeline_stable_diffusion_xl_instantid import StableDiffusionXLInstantIDPipeline
 
-import spaces
 import gradio as gr
 
 # global variable
@@ -169,7 +168,6 @@ def apply_style(style_name: str, positive: str, negative: str = "") -> tuple[str
     p, n = styles.get(style_name, styles[DEFAULT_STYLE_NAME])
     return p.replace("{prompt}", positive), n + ' ' + negative
 
-@spaces.GPU
 def generate_image(face_image, pose_image, prompt, negative_prompt, style_name, enhance_face_region, num_steps, identitynet_strength_ratio, adapter_strength_ratio, guidance_scale, seed, progress=gr.Progress(track_tqdm=True)):
 
     if face_image is None:
