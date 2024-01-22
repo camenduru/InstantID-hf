@@ -43,7 +43,7 @@ controlnet_path = f'./checkpoints/ControlNetModel'
 # Load pipeline
 controlnet = ControlNetModel.from_pretrained(controlnet_path, torch_dtype=torch.float16)
 
-base_model_path = 'GHArt/Unstable_Diffusers_YamerMIX_V9_xl_fp16'
+base_model_path = 'wangqixun/YamerMIX_v8'
 
 pipe = StableDiffusionXLInstantIDPipeline.from_pretrained(
     base_model_path,
