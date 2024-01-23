@@ -240,7 +240,7 @@ def generate_image(face_image, pose_image, prompt, negative_prompt, style_name, 
 
     return images, gr.update(visible=True)
 
-def clearCudaCache():
+def clear_cuda_cache():
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
 
@@ -396,7 +396,7 @@ with gr.Blocks(css=css) as demo:
             inputs=[face_files, pose_files, prompt, negative_prompt, style, enhance_face_region, num_steps, identitynet_strength_ratio, adapter_strength_ratio, guidance_scale, seed],
             outputs=[gallery, usage_tips]
         ).then(
-            fn=clearCudaCache
+            fn=clear_cuda_cache
         )
     
     gr.Examples(
