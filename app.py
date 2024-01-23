@@ -18,7 +18,6 @@ from insightface.app import FaceAnalysis
 from style_template import styles
 from pipeline_stable_diffusion_xl_instantid import StableDiffusionXLInstantIDPipeline
 
-import spaces
 import gradio as gr
 
 # global variable
@@ -28,10 +27,10 @@ STYLE_NAMES = list(styles.keys())
 DEFAULT_STYLE_NAME = "Watercolor"
 
 # download checkpoints
-from huggingface_hub import hf_hub_download
-hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.json", local_dir="./checkpoints")
-hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/diffusion_pytorch_model.safetensors", local_dir="./checkpoints")
-hf_hub_download(repo_id="InstantX/InstantID", filename="ip-adapter.bin", local_dir="./checkpoints")
+# from huggingface_hub import hf_hub_download
+# hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/config.json", local_dir="./checkpoints")
+# hf_hub_download(repo_id="InstantX/InstantID", filename="ControlNetModel/diffusion_pytorch_model.safetensors", local_dir="./checkpoints")
+# hf_hub_download(repo_id="InstantX/InstantID", filename="ip-adapter.bin", local_dir="./checkpoints")
 
 # Load face encoder
 app = FaceAnalysis(name='antelopev2', root='./', providers=['CUDAExecutionProvider', 'CPUExecutionProvider'])
@@ -44,7 +43,7 @@ controlnet_path = f'./checkpoints/ControlNetModel'
 # Load pipeline
 controlnet = ControlNetModel.from_pretrained(controlnet_path, torch_dtype=torch.float16)
 
-base_model_path = 'GHArt/Unstable_Diffusers_YamerMIX_V9_xl_fp16'
+base_model_path = 'wangqixun/YamerMIX_v8'
 
 pipe = StableDiffusionXLInstantIDPipeline.from_pretrained(
     base_model_path,
@@ -169,7 +168,6 @@ def apply_style(style_name: str, positive: str, negative: str = "") -> tuple[str
     p, n = styles.get(style_name, styles[DEFAULT_STYLE_NAME])
     return p.replace("{prompt}", positive), n + ' ' + negative
 
-@spaces.GPU
 def generate_image(face_image, pose_image, prompt, negative_prompt, style_name, enhance_face_region, num_steps, identitynet_strength_ratio, adapter_strength_ratio, guidance_scale, seed, progress=gr.Progress(track_tqdm=True)):
 
     if face_image is None:
@@ -411,4 +409,4 @@ with gr.Blocks(css=css) as demo:
     
     gr.Markdown(article)
 
-demo.launch()
+demo.launch(share=True)
