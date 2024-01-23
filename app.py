@@ -240,6 +240,10 @@ def generate_image(face_image, pose_image, prompt, negative_prompt, style_name, 
 
     return images, gr.update(visible=True)
 
+def clear_cuda_cache():
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
 ### Description
 title = r"""
 <h1 align="center">InstantID: Zero-shot Identity-Preserving Generation in Seconds</h1>
@@ -391,6 +395,8 @@ with gr.Blocks(css=css) as demo:
             fn=generate_image,
             inputs=[face_files, pose_files, prompt, negative_prompt, style, enhance_face_region, num_steps, identitynet_strength_ratio, adapter_strength_ratio, guidance_scale, seed],
             outputs=[gallery, usage_tips]
+        ).then(
+            fn=clear_cuda_cache
         )
     
     gr.Examples(
